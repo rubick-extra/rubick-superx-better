@@ -1,0 +1,53 @@
+{
+  "name": "rubick-superx-better",
+  "pluginName": "超级面板2",
+  "version": "2.0.12",
+  "description": "Ctrl + W 唤起超级面板",
+  "main": "index.html",
+  "entry": "main.js",
+  "preload": "preload.js",
+  "logo": "https://pic1.zhimg.com/80/v2-c4b9ea27fde09f7e985a5fc77d922680_720w.png",
+  "pluginType": "system",
+  "features": [
+    {
+      "code": "setting",
+      "explain": "设置超级面板",
+      "cmds": [
+        "设置超级面板",
+        "超级面板"
+      ]
+    }
+  ],
+  "license": "ISC",
+  "author": "superx",
+  "homepage": "https://github.com/rubickCenter/rubick-system-super-panel#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.10",
+    "@nut-tree/nut-js": "^3.1.2",
+    "ant-design-vue": "4.0.1",
+    "execa": "^1.0.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "rubick-active-win": "^8.1.1",
+    "unplugin-auto-import": "^19.3.0",
+    "unplugin-vue-components": "^28.7.0",
+    "uuid": "^9.0.0",
+    "vite-plugin-html-template-mpa": "^1.0.29",
+    "vite-plugin-multi-pages": "^0.0.14",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "sass": "^1.89.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vue-tsc": "^2.2.8"
+  }
+}
