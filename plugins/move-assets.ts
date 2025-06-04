@@ -6,21 +6,33 @@ export default function moveAssets() {
     name: 'move-assets',
     async closeBundle() {
       const pwd = process.cwd();
+      await new Promise((resolve) => {
+        deleteFolderRecursive(path.join(pwd, './assets'), resolve);
+      });
       const assetsPath = path.join(pwd, './dist/assets');
       const assetsTargetPath = path.join(pwd, './assets');
       moveFolder(assetsPath, assetsTargetPath);
 
       const idxFrom = path.join(pwd, './dist/src/pages/index/index.html');
+      filterHtmlContent(idxFrom);
       const idxTo = path.join(pwd, './index.html');
       await moveFilePromise(idxFrom, idxTo);
 
       const mainFrom = path.join(pwd, './dist/src/pages/main/index.html');
+      filterHtmlContent(mainFrom);
       const mainTo = path.join(pwd, './main.html');
       await moveFilePromise(mainFrom, mainTo);
 
       deleteFolderRecursive(path.join(pwd, './dist'), () => {});
     }
   }
+}
+
+function filterHtmlContent(filepath: string) {
+  const content = fs.readFileSync(filepath, 'utf-8');
+  const regex = /\.\.\/\.\.\/\./g;
+  const result = content.replace(regex, '');
+  fs.writeFileSync(filepath, result);
 }
 
 function moveFolder(source: string, destination: string, callback?: (err: any) => void) {

@@ -3,8 +3,11 @@
   <div class="container">
     <a-form :model="formState" name="basic" :label-col="{ span: 10 }" :wrapper-col="{ span: 14 }" autocomplete="off"
       @finish="saveHotKey">
-      <a-form-item label="超级面板快捷键设置" name="superPanelHotKey" :rules="[{ required: true, message: '请输入快捷键!' }]">
+      <a-form-item label="键盘快捷键" name="superPanelHotKey">
         <a-input v-model:value="formState.superPanelHotKey" />
+      </a-form-item>
+      <a-form-item label="鼠标快捷键" name="superPanelMouseHotKey">
+        <a-input v-model:value="formState.superPanelMouseHotKey" />
       </a-form-item>
 
       <a-form-item :wrapper-col="{ offset: 10, span: 14 }">
@@ -21,6 +24,7 @@ const id = 'rubick-system-super-panel-store'
 
 const formState = reactive({
   superPanelHotKey: window.rubick.dbStorage.getItem(id) || 'Ctrl+W',
+  superPanelMouseHotKey: ''
 });
 
 const saveHotKey = () => {

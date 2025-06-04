@@ -16,6 +16,7 @@ function getSrcPath(srcName = 'src') {
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '',
   resolve: {
     alias: {
       '@': getSrcPath()
@@ -30,6 +31,8 @@ export default defineConfig({
     moveAssets()
   ],
   build: {
+    sourcemap: true,
+    watch: {},
     rollupOptions: {
       external: ['@nut-tree/nut-js', 'rubick-active-win', 'request', 'request-promise', 'uuid', 'execa', 'child_process', 'os', 'electron']
     }

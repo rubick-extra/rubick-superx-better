@@ -149,31 +149,33 @@ module.exports = () => {
       
       // 生成键盘监听事件
       const dbStore = await API.dbGet({data: {id}}) || {};
-      const superPanelHotKey = dbStore.value || 'Ctrl+W';
-      setTimeout(() => {
-        globalShortcut.register(superPanelHotKey, async () => {
-          const { x, y } = screen.getCursorScreenPoint()
-          const copyResult = await getSelectedContent(clipboard);
-          if (!copyResult.text && !copyResult.fileUrl) {
-            const nativeWinInfo = await activeWin({screenRecordingPermission: false});
-            copyResult.fileUrl = nativeWinInfo && nativeWinInfo.owner && nativeWinInfo.owner.path;
-          }
-          let win = panelInstance.getWindow();
-          
-          const localPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
-          
-          win.webContents.send('trigger-super-panel', {
-            ...copyResult,
-            optionPlugin: localPlugins,
-          });
-          const pos = getPos(screen, {x, y});
-          win.setPosition(parseInt(pos.x), parseInt(pos.y));
-          win.setAlwaysOnTop(true);
-          win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
-          win.focus();
-          win.setVisibleOnAllWorkspaces(false, {visibleOnFullScreen: true});
-          win.show();
+      const superPanelHotKey = dbStore.value;
+
+      const handler = async () => {
+        const { x, y } = screen.getCursorScreenPoint()
+        const copyResult = await getSelectedContent(clipboard);
+        if (!copyResult.text && !copyResult.fileUrl) {
+          const nativeWinInfo = await activeWin({screenRecordingPermission: false});
+          copyResult.fileUrl = nativeWinInfo && nativeWinInfo.owner && nativeWinInfo.owner.path;
+        }
+        let win = panelInstance.getWindow();
+        
+        const localPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
+        
+        win.webContents.send('trigger-super-panel', {
+          ...copyResult,
+          optionPlugin: localPlugins,
         });
+        const pos = getPos(screen, {x, y});
+        win.setPosition(parseInt(pos.x), parseInt(pos.y));
+        win.setAlwaysOnTop(true);
+        win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
+        win.focus();
+        win.setVisibleOnAllWorkspaces(false, {visibleOnFullScreen: true});
+        win.show();
+      }
+      setTimeout(() => {
+        superPanelHotKey && globalShortcut.register(superPanelHotKey, handler);
       }, 1000)
     },
   }

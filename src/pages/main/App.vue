@@ -58,6 +58,9 @@
 import { PushpinOutlined, SettingOutlined } from '@ant-design/icons-vue';
 import { ref, reactive, toRefs, watch } from 'vue';
 import {formatReg, db, openSettings, showMainWindow, finders, getFinderPath, ipcSendSync} from './utils';
+import link from '@/assets/link.png?url';
+import newIcon from '@/assets/new.png?url';
+import terminal from '@/assets/terminal.png?url';
 
 const { ipcRenderer, clipboard } = window.require('electron');
 const path = window.require('path');
@@ -72,7 +75,7 @@ const state = reactive({
       color: '#efeed6',
       type: 'default',
       name: '终端打开',
-      logo: require('./assets/terminal.png'),
+      logo: terminal,
       click: () => {
         if (os.type() === 'Windows_NT') {
           spawn(`start cmd.exe /k "cd /d ${state.fileUrl}"`, [], { shell: true });
@@ -85,7 +88,7 @@ const state = reactive({
       color: '#efeed6',
       type: 'default',
       name: '新建文件',
-      logo: require('./assets/new.png'),
+      logo: newIcon,
       click: () => {
         ipcRenderer.send('create-file', {
           title: "请选择要保存的文件名",
@@ -100,7 +103,7 @@ const state = reactive({
       color: '#efeed6',
       type: 'default',
       name: '复制路径',
-      logo: require('./assets/link.png'),
+      logo: link,
       click: () => {
         clipboard.writeText(state.fileUrl.replace('file://', ''))
       }
@@ -110,7 +113,7 @@ const state = reactive({
     {
       type: 'default',
       name: '复制当前路径',
-      logo: require('./assets/link.png'),
+      logo: link,
       click: () => {
         clipboard.writeText(state.fileUrl.replace('file://', ''))
       }
