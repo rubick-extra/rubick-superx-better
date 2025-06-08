@@ -12,9 +12,9 @@ dist
 dist-ssr
 *.local
 
-assets
-index.html
-main.html
+/assets
+/index.html
+/main.html
 
 # Editor directories and files
 .vscode/*

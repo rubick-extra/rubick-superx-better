@@ -1,6 +1,6 @@
 {
   "name": "rubick-superx-better",
-  "pluginName": "超级面板2",
+  "pluginName": "超级面板better",
   "version": "2.0.12",
   "description": "Ctrl + W 唤起超级面板",
   "main": "index.html",
@@ -49,5 +49,8 @@
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vue-tsc": "^2.2.8"
+  },
+  "volta": {
+    "node": "18.20.8"
   }
 }
