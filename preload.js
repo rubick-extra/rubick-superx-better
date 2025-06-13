@@ -17,6 +17,21 @@ const ipcSend = (type, data) => {
   });
 };
 
+window.io = {
+  startRecordEvent() {
+    ipcRenderer.send('stop-record-event');
+    ipcRenderer.send('start-record-event');
+  },
+  stopRecordEvent() {
+    ipcRenderer.send('stop-record-event');
+  },
+  onRecordEventChange(callback) {
+    ipcRenderer.on('record-event-change', (e, data) => {
+      callback(data);
+    });
+  },
+}
+
 window.market = {
   getLocalPlugins() {
     return remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();

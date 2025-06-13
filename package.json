@@ -22,18 +22,19 @@
   "author": "superx",
   "homepage": "https://github.com/rubickCenter/rubick-system-super-panel#readme",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/watch.cjs",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@electron/remote": "^2.0.10",
     "@nut-tree/nut-js": "^3.1.2",
-    "ant-design-vue": "4.0.1",
+    "ant-design-vue": "4.2.6",
     "execa": "^1.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "rubick-active-win": "^8.1.1",
+    "uiohook-napi": "^1.5.4",
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.7.0",
     "uuid": "^9.0.0",
@@ -47,10 +48,11 @@
     "@vue/tsconfig": "^0.7.0",
     "sass": "^1.89.1",
     "typescript": "~5.8.3",
+    "unocss": "^66.1.4",
     "vite": "^6.3.5",
     "vue-tsc": "^2.2.8"
   },
   "volta": {
-    "node": "18.20.8"
+    "node": "20.19.2"
   }
 }

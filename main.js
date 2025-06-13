@@ -3,8 +3,9 @@ const { keyboard, Key } = require("@nut-tree/nut-js");
 const os = require("os");
 const { v4: uuid } = require('uuid');
 const activeWin = require('rubick-active-win');
-const {chmodSync} = require("fs");
+const { chmodSync } = require("fs");
 const path = require('path');
+const EventRecorder = require('./tools/event-recorder');
 
 keyboard.config.autoDelayMs = 10;
 
@@ -15,6 +16,8 @@ try {
   const bin = path.join(__dirname, '../rubick-active-win/main');
   chmodSync(bin, 0o755);
 }
+
+const eventRecorder = new EventRecorder();
 
 const isMacOS = os.type() === "Darwin";
 
@@ -55,9 +58,9 @@ const getFilePathFromClipboard = (clipboard) => {
         .filter((_, index) => rawFilePathStr.charCodeAt(index) !== 0)
         .join('')
         .replace(/\\/g, '\\');
-      
+
       const drivePrefix = formatFilePathStr.match(/[a-zA-Z]:\\/);
-      
+
       if (drivePrefix) {
         const drivePrefixIndex = formatFilePathStr.indexOf(drivePrefix[0]);
         if (drivePrefixIndex !== 0) {
@@ -93,11 +96,11 @@ const getFilePathFromClipboard = (clipboard) => {
 
 function getSelectedContent(clipboard) {
   // eslint-disable-next-line no-async-promise-executor
-  return new Promise( async (resolve) => {
+  return new Promise(async (resolve) => {
     // todo 缓存文件
     clipboard.clear();
     await simulateCopy();
-    
+
     setTimeout(() => {
       // 延时一定时间才能从剪切板内读取到内容
       const text = clipboard.readText('clipboard') || ''
@@ -105,7 +108,7 @@ function getSelectedContent(clipboard) {
       // if (this.isWin) {
       //   // todo https://github.com/njzydark/Aragorn/blob/afe4a60972b4255dd417480ca6aca2af1fd8e637/packages/aragorn-app-main/src/uploaderManager.ts#L88
       // }
-      
+
       resolve({
         text: fileUrl ? '' : text,
         fileUrl
@@ -115,7 +118,7 @@ function getSelectedContent(clipboard) {
 }
 
 const getPos = (screen, point) => {
-  return isMacOS ? point : screen.screenToDipPoint({x: point.x, y: point.y});
+  return isMacOS ? point : screen.screenToDipPoint({ x: point.x, y: point.y });
 }
 
 const getPermission = () => {
@@ -139,39 +142,50 @@ const id = 'rubick-system-super-panel-store'
 module.exports = () => {
   return {
     async onReady(ctx) {
-      const {clipboard, screen, globalShortcut, API} = ctx;
+      const { clipboard, screen, globalShortcut, API, ipcMain } = ctx;
       const permission = getPermission();
       if (!permission) return;
-      
+
       // 初始化超级面板 window
       const panelInstance = superPanel(ctx);
       panelInstance.init();
-      
+
       // 生成键盘监听事件
-      const dbStore = await API.dbGet({data: {id}}) || {};
+      const dbStore = await API.dbGet({ data: { id } }) || {};
       const superPanelHotKey = dbStore.value;
+
+      ipcMain.on('start-record-event', (e) => {
+        const { sender } = e;
+        eventRecorder.start();
+        eventRecorder.on('change', (buffers) => {
+          sender.send('record-event-change', buffers);
+        });
+      });
+      ipcMain.on('stop-record-event', (e, data) => {
+        eventRecorder.stop();
+      });
 
       const handler = async () => {
         const { x, y } = screen.getCursorScreenPoint()
         const copyResult = await getSelectedContent(clipboard);
         if (!copyResult.text && !copyResult.fileUrl) {
-          const nativeWinInfo = await activeWin({screenRecordingPermission: false});
+          const nativeWinInfo = await activeWin({ screenRecordingPermission: false });
           copyResult.fileUrl = nativeWinInfo && nativeWinInfo.owner && nativeWinInfo.owner.path;
         }
         let win = panelInstance.getWindow();
-        
+
         const localPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
-        
+
         win.webContents.send('trigger-super-panel', {
           ...copyResult,
           optionPlugin: localPlugins,
         });
-        const pos = getPos(screen, {x, y});
+        const pos = getPos(screen, { x, y });
         win.setPosition(parseInt(pos.x), parseInt(pos.y));
         win.setAlwaysOnTop(true);
-        win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
+        win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
         win.focus();
-        win.setVisibleOnAllWorkspaces(false, {visibleOnFullScreen: true});
+        win.setVisibleOnAllWorkspaces(false, { visibleOnFullScreen: true });
         win.show();
       }
       setTimeout(() => {

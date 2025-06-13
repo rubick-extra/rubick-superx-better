@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import mpa from 'vite-plugin-multi-pages';
 import path from 'path';
 import moveAssets from './plugins/move-assets';
+import UnoCSS from 'unocss/vite'
 
 function getRootPath() {
   return path.resolve(process.cwd());
@@ -23,6 +24,7 @@ export default defineConfig({
     }
   },
   plugins: [
+    UnoCSS(),
     vue(),
     mpa({
       scanDir: 'src/pages',
@@ -32,7 +34,6 @@ export default defineConfig({
   ],
   build: {
     sourcemap: true,
-    watch: {},
     rollupOptions: {
       external: ['@nut-tree/nut-js', 'rubick-active-win', 'request', 'request-promise', 'uuid', 'execa', 'child_process', 'os', 'electron']
     }
