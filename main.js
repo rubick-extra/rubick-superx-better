@@ -5,7 +5,7 @@ const { v4: uuid } = require('uuid');
 const activeWin = require('rubick-active-win');
 const { chmodSync } = require("fs");
 const path = require('path');
-const EventRecorder = require('./tools/event-recorder');
+require('@rubick-extra/io-tools/use-io-events');
 
 keyboard.config.autoDelayMs = 10;
 
@@ -16,8 +16,6 @@ try {
   const bin = path.join(__dirname, '../rubick-active-win/main');
   chmodSync(bin, 0o755);
 }
-
-const eventRecorder = new EventRecorder();
 
 const isMacOS = os.type() === "Darwin";
 
@@ -154,17 +152,6 @@ module.exports = () => {
       const dbStore = await API.dbGet({ data: { id } }) || {};
       const superPanelHotKey = dbStore.value;
 
-      ipcMain.on('start-record-event', (e) => {
-        const { sender } = e;
-        eventRecorder.start();
-        eventRecorder.on('change', (buffers) => {
-          sender.send('record-event-change', buffers);
-        });
-      });
-      ipcMain.on('stop-record-event', (e, data) => {
-        eventRecorder.stop();
-      });
-
       const handler = async () => {
         const { x, y } = screen.getCursorScreenPoint()
         const copyResult = await getSelectedContent(clipboard);
@@ -188,9 +175,16 @@ module.exports = () => {
         win.setVisibleOnAllWorkspaces(false, { visibleOnFullScreen: true });
         win.show();
       }
-      setTimeout(() => {
-        superPanelHotKey && globalShortcut.register(superPanelHotKey, handler);
-      }, 1000)
+
+      const recorder = globalThis.useIOShortcutRecorder(shortcut => {
+        if (shortcut.status === 'finished') {
+          const { label } = shortcut;
+          if (label === superPanelHotKey) {
+            handler();
+          }
+        }
+      })
+      ipcMain.on('iohook', (data) => recorder.handleIO(data))
     },
   }
 }

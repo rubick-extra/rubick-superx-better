@@ -1,5 +1,6 @@
 const remote = require('@electron/remote');
 const { ipcRenderer } = require('electron');
+require('@rubick-extra/io-tools/use-io-events');
 
 const ipcSendSync = (type, data) => {
   const returnValue = ipcRenderer.sendSync('msg-trigger', {
@@ -16,21 +17,6 @@ const ipcSend = (type, data) => {
     data,
   });
 };
-
-window.io = {
-  startRecordEvent() {
-    ipcRenderer.send('stop-record-event');
-    ipcRenderer.send('start-record-event');
-  },
-  stopRecordEvent() {
-    ipcRenderer.send('stop-record-event');
-  },
-  onRecordEventChange(callback) {
-    ipcRenderer.on('record-event-change', (e, data) => {
-      callback(data);
-    });
-  },
-}
 
 window.market = {
   getLocalPlugins() {

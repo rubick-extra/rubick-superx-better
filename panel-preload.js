@@ -1,5 +1,6 @@
 const request = require('request-promise')
 const crypto = require('crypto');
+require('@rubick-extra/io-tools/use-io-events')
 
 /**
  * 翻译器

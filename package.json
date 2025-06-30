@@ -1,10 +1,11 @@
 {
-  "name": "rubick-superx-better",
+  "name": "@rubick-extra/superx-better",
   "pluginName": "超级面板better",
   "version": "2.0.12",
   "description": "Ctrl + W 唤起超级面板",
   "main": "index.html",
   "entry": "main.js",
+  "development": "http://localhost:5173",
   "preload": "preload.js",
   "logo": "https://pic1.zhimg.com/80/v2-c4b9ea27fde09f7e985a5fc77d922680_720w.png",
   "pluginType": "system",
@@ -22,7 +23,8 @@
   "author": "superx",
   "homepage": "https://github.com/rubickCenter/rubick-system-super-panel#readme",
   "scripts": {
-    "dev": "node scripts/watch.cjs",
+    "dev": "vite",
+    "watch": "node scripts/watch.cjs",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
@@ -52,6 +54,20 @@
     "vite": "^6.3.5",
     "vue-tsc": "^2.2.8"
   },
+  "files": [
+    "assets",
+    "modules",
+    "plugins",
+    "scripts",
+    "src",
+    "index.html",
+    "main.html",
+    "main.js",
+    "panel-preload.js",
+    "panel-window.js",
+    "preload.js",
+    "yarn.lock"
+  ],
   "volta": {
     "node": "20.19.2"
   }
