@@ -9,13 +9,16 @@ require('@rubick-extra/io-tools/use-io-events');
 
 keyboard.config.autoDelayMs = 10;
 
-try {
-  const bin = path.join(__dirname, './node_modules/rubick-active-win/main');
-  chmodSync(bin, 0o755);
-} catch (e) {
-  const bin = path.join(__dirname, '../rubick-active-win/main');
-  chmodSync(bin, 0o755);
-}
+const list = [
+  path.join(__dirname, './node_modules/rubick-active-win/main'),
+  path.join(__dirname, '../rubick-active-win/main'),
+  path.join(__dirname, '../../../node_modules/rubick-active-win/main'),
+]
+list.forEach(item => {
+  try {
+    chmodSync(item, 0o755);
+  } catch {}
+})
 
 const isMacOS = os.type() === "Darwin";
 
