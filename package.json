@@ -2,7 +2,7 @@
   "name": "@rubick-extra/superx-better",
   "pluginName": "超级面板better",
   "version": "2.0.12",
-  "description": "Ctrl + W 唤起超级面板",
+  "description": "更易用的超级面板，支持自定义快捷键唤起面板",
   "main": "index.html",
   "entry": "main.js",
   "development": "http://localhost:5173",
@@ -20,7 +20,7 @@
     }
   ],
   "license": "ISC",
-  "author": "superx",
+  "author": "rubick-extra",
   "homepage": "https://github.com/rubickCenter/rubick-system-super-panel#readme",
   "scripts": {
     "dev": "vite",
